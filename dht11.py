@@ -2,20 +2,27 @@
 
 """ read a DHT11 temperature / humidity sensor and spit it out as JSON """
 
+import os
 import json
 import time
 from flask import Flask
 import Adafruit_DHT
 
 DHT_SENSOR = Adafruit_DHT.DHT11
-DHT_PIN = 4
+DEFAULT_DHT_PIN = 4
 
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
 
-@app.route("/")
-def read_sensor(pin=4, sensor=None):
+@APP.route("/")
+def read_sensor(pin=None, sensor=None):
+    """ read data from a DHT11 sensor """
+    if pin is None:
+        if "DHT_PIN" in os.environ:
+            pin = os.environ["DHT_PIN"]
+        else:
+            pin = DEFAULT_DHT_PIN
 
     if sensor is None:
         sensor = Adafruit_DHT.DHT11
@@ -38,7 +45,7 @@ def read_sensor(pin=4, sensor=None):
 def main():
     """ the main function """
 
-    print(read_sensor(DHT_PIN, DHT_SENSOR))
+    print(read_sensor())
 
 
 if __name__ == "__main__":

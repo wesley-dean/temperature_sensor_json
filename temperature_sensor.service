@@ -1,0 +1,12 @@
+[Unit]
+Description=Temperature Sensor server
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/usr/local/temperature_sensor_json/
+ExecStart=flask run
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
