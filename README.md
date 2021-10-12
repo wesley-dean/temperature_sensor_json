@@ -8,21 +8,64 @@ in a nicely formatted JSON object.
 
 # Installation
 
+## Prequesites
+
+There is a `requirements.txt` file which includes the needed
+packages and such so one may use `pip install -r requirements.txt`
+to install them.  However, for reasons beyond my patience to
+explore, this can flake out on my Raspberry Pis and I find
+using the system package manager works better:
+
+```shell
+sudo apt-get install python3-dotenv python3-flask
+```
+
+## Hardware Setup (GPIO)
+
+I use the following pins on my devices:
+
+```
+ 1: . .
+ 3: . +
+ 5: . -
+ 7: s .
+ 9: . .
+11: . .
+13: . .
+15: . .
+17: . .
+19: . .
+21: . .
+23: . .
+25: . .
+```
+
+or:
+
+* pin 4: power (5v)
+* pin 6: ground
+* pin 7: signal
+
+I didn't bother with a breadboard -- I used the 3x female
+to female wires that came with the DHT11 sensor
+
+## Server Startup
+
 Copy, clone, or symlink this directory to
 `/usr/local/temperature_sensor_json`
 
 To have the sensor start at boot and return the results
-via HTTP request (using Flask), copy or symlink the
-`temperature_sensor.service` file to `/etc/systemd/system/`
+via HTTP request (using Flask), run the provided 
+`temperature_sensor_server.sh` script.
 
-Note: when updating systemd services, be sure to reload
-them after every change:
+It may be preferable to have the service start at boot and
+restart should it croak.  If that's desired, either add a
+line to run the provided script to a boot script or crontab.
 
-```
-systemctl daemon-reload
-```
 
 # Usage
+
+## Command Line Interface
 
 To perform a one-time read of the sensor and display the
 JSON output, run the `dht11.py` program:
@@ -36,4 +79,26 @@ upon request, use Flask:
 
 ```shell
 flask run
+```
+
+### Environment Variables
+
+* `DHT_PIN`: which pin is used carry the signal from the sensor (4)
+* `SERVER_HOME`: where on the device the software was installed (.)
+* `PORT`: which port Flask should listen on (5001)
+
+## RESTful API
+
+The Flask service listens on port 5001 for incoming HTTP
+(not HTTPS!) connections; it responds with a JSON object
+that looks like this:
+
+```json
+{
+  "celcius": "22.0",
+  "fahrenheit": "71.6",
+  "humidity": "68.0",
+  "localtime": "Tue Oct 12 14:09:03 2021",
+  "gm": "Sat Oct 09 18:09:03 2021"
+}
 ```
