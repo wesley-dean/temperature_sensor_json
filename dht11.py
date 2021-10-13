@@ -29,17 +29,24 @@ def read_sensor(pin=None, sensor=None):
 
     result = {}
 
-    humidity, temperature = Adafruit_DHT.read(sensor, pin)
+    humidity = None
+    temperature = None
 
-    if humidity is not None and temperature is not None:
+    while humidity is None and temperature is None:
 
-        result["celcius"] = "{0:.1f}".format(temperature)
-        result["fahrenheit"] = "{0:.1f}".format(32 + (9 / 5 * temperature))
-        result["humidity"] = "{0:.1f}".format(humidity)
-        result["localtime"] = time.asctime(time.localtime())
-        result["gm"] = time.asctime(time.gmtime())
+        humidity, temperature = Adafruit_DHT.read(sensor, pin)
 
-    return json.dumps(result)
+        if humidity is None or temperature is None:
+            time.sleep(1)
+
+        else:
+            result["celcius"] = "{0:.1f}".format(temperature)
+            result["fahrenheit"] = "{0:.1f}".format(32 + (9 / 5 * temperature))
+            result["humidity"] = "{0:.1f}".format(humidity)
+            result["localtime"] = time.asctime(time.localtime())
+            result["gm"] = time.asctime(time.gmtime())
+
+            return json.dumps(result)
 
 
 def main():
