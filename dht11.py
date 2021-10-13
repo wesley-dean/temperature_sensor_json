@@ -16,7 +16,7 @@ APP = Flask(__name__)
 
 
 @APP.route("/")
-def read_sensor(pin=None, sensor=None):
+def read_sensor(pin=None, sensor=None, max_fails=10):
     """ read data from a DHT11 sensor """
     if pin is None:
         if "DHT_PIN" in os.environ:
@@ -31,12 +31,14 @@ def read_sensor(pin=None, sensor=None):
 
     humidity = None
     temperature = None
+    failures = 0
 
-    while humidity is None and temperature is None:
+    while humidity is None and temperature is None and failures < max_fails:
 
         humidity, temperature = Adafruit_DHT.read(sensor, pin)
 
         if humidity is None or temperature is None:
+            failures += 1
             time.sleep(1)
 
         else:
