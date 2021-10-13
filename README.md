@@ -22,6 +22,16 @@ sudo apt-get install python3-dotenv python3-flask
 
 ## Hardware Setup (GPIO)
 
+I used a DHT11 temeprature and humidity sensor with three pins
+that is mounted to a PCB with a 10K Ohm pull-up resistor.  The
+sensors are very inexpensive (I paid $10 for 5 of them on
+Amazon) but they're also less accurate than, for example a
+DHT22 sensor.  Compared to a DHT22, a DHT11 has less accurate 
+and smaller ranges for temperature and humidity but costs
+half as much.  Since I'm primarily using the sensors in
+use cases such as determining when to run a dehumidifier,
+a DHT11 is perfectly acceptable to me.
+
 I use the following pins on my devices:
 
 ```
@@ -47,7 +57,7 @@ or:
 * pin 7: signal
 
 I didn't bother with a breadboard -- I used the 3x female
-to female wires that came with the DHT11 sensor
+to female wires that came with the DHT11 sensor.
 
 ## Server Startup
 
@@ -98,7 +108,7 @@ that looks like this:
   "celcius": "22.0",
   "fahrenheit": "71.6",
   "humidity": "68.0",
-  "localtime": "Tue Oct 12 14:09:03 2021",
+  "localtime": "Sat Oct 09 14:09:03 2021",
   "gm": "Sat Oct 09 18:09:03 2021"
 }
 ```
